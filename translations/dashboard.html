@@ -1,0 +1,374 @@
+<!-- templates/dashboard.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom style for sidebar and main content */
+        body {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 15px;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .navbar-toggler {
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'><path stroke='rgba%28255, 255, 255, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/></svg>");
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                display: none;
+            }
+
+            .sidebar.active {
+                display: block;
+                position: absolute;
+                z-index: 1000;
+                height: 100vh;
+            }
+        }
+
+        .content-section {
+            display: none; /* Initially hide all sections */
+        }
+
+        .active-section {
+            display: block; /* Display the active section */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <nav class="sidebar bg-dark">
+        <a href="#" class="navbar-brand d-flex align-items-center mb-3">
+            <span class="fs-4">Admin Dashboard</span>
+        </a>
+        <hr>
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('dashboard-section')">Dashboard</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('add-admin-section')">Add New Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('update-admin-section')">Update Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('delete-admin-section')">Delete Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('add-nd-section')">Add New ND</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('update-nd-section')">Update ND</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#" onclick="showSection('delete-nd-section')">Delete ND</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('auth.logout') }}">Logout</a>
+
+            </li>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content container mt-5">
+        <!-- Flash Messages Section -->
+        {% if patients %}
+    {% for patient in patients %}
+        <tr>
+            <td>{{ patient.first_name }} {{ patient.last_name }}</td>
+            <td>{{ patient.age }}</td>
+            <td>{{ patient.sex }}</td>
+            <td>{{ patient.mna_result.status if patient.mna_result else 'N/A' }}</td>
+        </tr>
+    {% endfor %}
+{% else %}
+    <tr><td colspan="5">No patients available.</td></tr>
+{% endif %}
+
+        <!-- Dashboard Section -->
+        <div id="dashboard-section" class="content-section active-section">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h1 class="card-title">Dashboard</h1>
+                </div>
+                <div class="card-body">
+                    <form method="GET" action="{{ url_for('dashboard') }}" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="name" placeholder="Search by name">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" name="age" placeholder="Filter by age">
+                        </div>
+                        <div class="col-md-3">
+                            <select name="sex" class="form-select">
+                                <option value="">Select Gender</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <select name="status" class="form-select">
+                                <option value="">Select Nutritional Status</option>
+                                <option value="Normal nutritional status">Normal nutritional status</option>
+                                <option value="At risk of malnutrition">At risk of malnutrition</option>
+                                <option value="Malnourished">Malnourished</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success w-100">Filter</button>
+                        </div>
+                    </form>
+                    
+                    <table class="table mt-4">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Name</th>
+                                <th>Age</th>
+                                <th>Gender</th>
+                                <th>Score</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if screenings %}
+                                {% for screening in screenings %}
+                                    <tr>
+                                        <td>{{ screening.first_name }} {{ screening.last_name }}</td>
+                                        <td>{{ screening.age }}</td>
+                                        <td>{{ screening.sex }}</td>
+                                        <td>{{ screening.score }}</td>
+                                        <td>{{ screening.status }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% else %}
+                                <tr><td colspan="5">No screening records available.</td></tr>
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New Admin Section -->
+        <div id="add-admin-section" class="content-section">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Add New Admin</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_admin') }}">
+                        <div class="mb-3">
+                            <label for="newUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="newUsername" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="newPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="newPassword" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Add Admin</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+<!-- Update Admin Section -->
+<div id="update-admin-section" class="content-section">
+    <div class="card">
+        <div class="card-header bg-warning text-white">
+            <h2>Update Admin</h2>
+        </div>
+        <div class="card-body">
+            <form method="POST" action="{{ url_for('update_admin', admin_id=admin_id_variable) }}">
+                <div class="mb-3">
+                    <label for="adminUsername" class="form-label">Admin Username</label>
+                    <input type="text" class="form-control" id="adminUsername" name="username" required>
+                </div>
+                <div class="mb-3">
+                    <label for="adminNewPassword" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="adminNewPassword" name="new_password" required>
+                </div>
+                <button type="submit" class="btn btn-warning w-100">Update Admin</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+        <!-- Delete Admin Section -->
+        <div id="delete-admin-section" class="content-section">
+            <div class="card">
+                <div class="card-header bg-danger text-white">
+                    <h2>Delete Admin</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('delete_admin', admin_id=admin_id_variable) }}">
+                        <div class="mb-3">
+                            <label for="deleteAdminUsername" class="form-label">Admin Username</label>
+                            <input type="text" class="form-control" id="deleteAdminUsername" name="username" required>
+                        </div>
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete Admin</button>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add New ND Section -->
+        <div id="add-nd-section" class="content-section">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h2>Add New Nutritionist/Dietitian</h2>
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="{{ url_for('add_nd') }}">
+                        <div class="mb-3">
+                            <label for="ndFirstName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="ndFirstName" name="first_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ndLastName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="ndLastName" name="last_name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ndEmail" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="ndEmail" name="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ndPhoneNumber" class="form-label">Phone Number</label>
+                            <input type="text" class="form-control" id="ndPhoneNumber" name="phone_number">
+                        </div>
+                        <div class="mb-3">
+                            <label for="ndUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="ndUsername" name="username" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="ndPassword" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="ndPassword" name="password" required>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100">Add Nutritionist/Dietitian</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+<!-- Update ND Section -->
+<div id="update-nd-section" class="content-section">
+    <div class="card">
+        <div class="card-header bg-warning text-white">
+            <h2>Update Nutritionist/Dietitian</h2>
+        </div>
+        <div class="card-body">
+            {% for nd in nds %}
+            <form method="POST" action="{{ url_for('update_nd', nd_id=nd.id) }}">
+                <!-- Form fields for updating -->
+                <div class="mb-3">
+                    <label for="ndUsername{{ nd.id }}" class="form-label">ND Username</label>
+                    <input type="text" class="form-control" id="ndUsername{{ nd.id }}" name="username" value="{{ nd.username }}" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ndNewPassword{{ nd.id }}" class="form-label">New Password</label>
+                    <input type="password" class="form-control" id="ndNewPassword{{ nd.id }}" name="new_password" required>
+                </div>
+                <button type="submit" class="btn btn-warning w-100">Update Nutritionist/Dietitian</button>
+            </form>
+            <form method="POST" action="{{ url_for('delete_nd', nd_id=nd.id) }}">
+            </form>
+            <hr> <!-- Optional separator between forms -->
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Delete ND Section -->
+<div id="delete-nd-section" class="content-section">
+    <div class="card">
+        <div class="card-header bg-danger text-white">
+            <h2>Delete Nutritionist/Dietitian</h2>
+        </div>
+        <div class="card-body">
+            {% for nd in nds %}
+            <form method="POST" action="{{ url_for('delete_nd', nd_id=nd.id) }}">
+                <div class="mb-3">
+                    <label for="deleteNdUsername{{ nd.id }}" class="form-label">ND Username</label>
+                    <input type="text" class="form-control" id="deleteNdUsername{{ nd.id }}" name="username" required>
+                </div>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this record?')">Delete Nutritionist/Dietitian</button>
+            </form>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+    <!-- Toggle Button for the sidebar -->
+    <nav class="navbar navbar-dark bg-dark fixed-top">
+        <button class="navbar-toggler" type="button" aria-label="Toggle navigation" onclick="toggleSidebar()">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </nav>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            setTimeout(function() {
+                $(".alert").fadeOut("slow", function() {
+                    $(this).remove();
+                });
+            }, 3000);
+        });
+    </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- JavaScript to toggle sidebar and show sections -->
+    <script>
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+        }
+
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active-section');
+            });
+
+            // Show the selected section
+            document.getElementById(sectionId).classList.add('active-section');
+        }
+    </script>
+</body>
+</html>

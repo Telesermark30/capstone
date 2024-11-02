@@ -1,0 +1,20 @@
+msgid "Select Language"
+msgstr "Pilia ang Imong  Pinulongan"
+
+msgid "English"
+msgstr "Iningles"
+
+msgid "Cebuano"
+msgstr "Cebuano"
+
+msgid "Select Age Group"
+msgstr "Pilia ang Age Group"
+
+msgid "Adolescent"
+msgstr "Tin-edyer"
+
+msgid "Adult"
+msgstr "Hamtong"
+
+msgid "Senior"
+msgstr "Tigulang"

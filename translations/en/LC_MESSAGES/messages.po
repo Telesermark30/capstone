@@ -1,0 +1,20 @@
+msgid "Select Language"
+msgstr "Select Language"
+
+msgid "English"
+msgstr "English"
+
+msgid "Cebuano"
+msgstr "Cebuano"
+
+msgid "Select Age Group"
+msgstr "Select Age Group"
+
+msgid "Adolescent"
+msgstr "Adolescent"
+
+msgid "Adult"
+msgstr "Adult"
+
+msgid "Senior"
+msgstr "Senior"

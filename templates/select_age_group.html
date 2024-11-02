@@ -1,0 +1,48 @@
+<!-- select_age_group.html -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>  <!-- Use the translated title -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card w-50 shadow">
+            <div class="card-body text-center">
+                <h1>{{ title }}</h1> <!-- Translated title -->
+                <form method="post">
+                    <!-- Adolescent Button -->
+                    <button type="submit" name="age_group" value="adolescent" class="btn btn-outline-primary btn-lg w-100 mb-3">
+                        {{ adolescent }} <!-- Translated Adolescent -->
+                    </button>
+
+                    <!-- Adult Button -->
+                    <button type="submit" name="age_group" value="adult" class="btn btn-outline-primary btn-lg w-100 mb-3">
+                        {{ adult }} <!-- Translated Adult -->
+                    </button>
+
+                    <!-- Senior Button -->
+                    <button type="submit" name="age_group" value="senior" class="btn btn-outline-primary btn-lg w-100 mb-3">
+                        {{ senior }} <!-- Translated Senior -->
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $(".alert").fadeOut("slow", function() {
+                $(this).remove();
+            });
+        }, 3000);
+    });
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

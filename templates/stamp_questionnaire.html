@@ -1,0 +1,73 @@
+<!-- stamp_questionnaire.html -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAMP Nutritional Screening</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .option-card {
+            height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin: 15px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .option-card:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex justify-content-center align-items-center vh-100">
+        <div class="card w-75 shadow">
+            <!-- Question Section -->
+            <div class="text-center p-4">
+                <h1>Step {{ step }}</h1>
+                <p class="text-center">{{ question }}</p>
+            </div>
+            <!-- Form Section inside card -->
+            <div class="card-body">
+                <form method="post">
+                    <div class="row justify-content-center">
+                        {% for option in options %}
+                        <div class="col-md-4 mb-3">
+                            <button type="submit" name="answer" value="{{ option.score }}" class="btn btn-link p-0">
+                                <div class="card option-card">
+                                    <div class="card-body">
+                                        <p class="card-text text-center">{{ option.text }}</p>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        setTimeout(function() {
+            $(".alert").fadeOut("slow", function() {
+                $(this).remove();
+            });
+        }, 3000);
+    });
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <footer style="background-color: #ed7297; padding: 10px; text-align: center;">
+        <p class="text-white">&copy; 2024 STAMP Nutritional Screening</p>
+    </footer>
+</body>
+
+</html>
